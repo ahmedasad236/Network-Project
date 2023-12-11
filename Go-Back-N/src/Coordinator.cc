@@ -20,6 +20,19 @@
 #include<stdio.h>
 Define_Module(Coordinator);
 
+int* Coordinator::readInput(std::string s, std::string del) {
+    int start, end = -1*del.size(), i = 0;
+    int* data = new int[2];
+
+    do {
+        start = end + del.size();
+        end = s.find(del, start);
+        data[i] = atoi(s.substr(start, end - start).c_str());
+        i++;
+    } while (end != -1);
+
+    return data;
+}
 void Coordinator::initialize()
 {
     std::string line;
@@ -31,7 +44,7 @@ void Coordinator::initialize()
     while (getline(filestream, line)) {
 
             int* data;
-            data = readInput(line);
+            data = readInput(line, " ");
             int nodeId = data[0]; //atoi(line.c_str());
             int startTime = data[1]; //atoi(line.c_str() + 1);
 
@@ -59,16 +72,3 @@ void Coordinator::handleMessage(cMessage *msg)
     // TODO - Generated method body
 }
 
-int* readInput(std::string s, std::string del= " ") {
-    int start, end = -1*del.size(), i = 0;
-    int* data = new int[2];
-
-    do {
-        start = end + del.size();
-        end = s.find(del, start);
-        data[i] = atoi(s.substr(start, end - start).c_str());
-        i++;
-    } while (end != -1);
-
-    return data;
-}
