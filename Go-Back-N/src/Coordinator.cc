@@ -14,7 +14,10 @@
 // 
 
 #include "Coordinator.h"
-
+#include<fstream>
+#include<string>
+#include<unistd.h>
+#include<stdio.h>
 Define_Module(Coordinator);
 
 void Coordinator::initialize()
@@ -58,7 +61,7 @@ void Coordinator::handleMessage(cMessage *msg)
 
 int* readInput(std::string s, std::string del= " ") {
     int start, end = -1*del.size(), i = 0;
-    int data [2];
+    int* data = new int[2];
 
     do {
         start = end + del.size();

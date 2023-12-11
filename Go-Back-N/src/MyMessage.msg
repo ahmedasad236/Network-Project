@@ -19,21 +19,18 @@
 
 cplusplus {{
 	#include <bitset>
-	typedef std::bitset<8> bits;
-	typedef unsigned char Byte;
+//	typedef std::bitset<8> bits;
+//	typedef unsigned char Byte;
 	
-	enum Msg_Type { Data, ACK, NACK };
+	//enum Msg_Type { Data, ACK, NACK };
 }};
 
-class noncobject bits;
-class noncobject Msg_Type;
-class noncobject Byte;
 
 packet MyMessage {
     @customize(true);  // see the generated C++ header for more info
 	int header;			// the data sequence number.
 	string messagePayload;	// the message contents after byte stuffing (in characters).
 	int ackNum;		// ACK/NACK number.
-	Byte trailer;		// the parity byte.
-	Msg_Type frameType;// Data=0/ACK=1 /NACK=2.
+	char trailer;		// the parity byte.
+	short frameType;// Data=0/ACK=1 /NACK=2.
 }
