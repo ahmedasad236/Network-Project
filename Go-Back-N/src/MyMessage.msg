@@ -13,22 +13,27 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __GO_BACK_N_COORDINATOR_H_
-#define __GO_BACK_N_COORDINATOR_H_
+//
+// TODO generated message class
+//
 
-#include <omnetpp.h>
-#include <string>
-using namespace omnetpp;
+cplusplus {{
+	#include <bitset>
+	typedef std::bitset<8> bits;
+	typedef unsigned char Byte;
+	
+	enum Msg_Type { Data, ACK, NACK };
+}};
 
-/**
- * TODO - Generated class
- */
-class Coordinator : public cSimpleModule
-{
-  protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
-    int* readInput(std::string s, std::string del= " ");
-};
+class noncobject bits;
+class noncobject Msg_Type;
+class noncobject Byte;
 
-#endif
+packet MyMessage {
+    @customize(true);  // see the generated C++ header for more info
+	int header;			// the data sequence number.
+	string messagePayload;	// the message contents after byte stuffing (in characters).
+	int ackNum;		// ACK/NACK number.
+	Byte trailer;		// the parity byte.
+	Msg_Type frameType;// Data=0/ACK=1 /NACK=2.
+}
