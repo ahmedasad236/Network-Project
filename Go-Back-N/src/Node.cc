@@ -6,6 +6,7 @@ Define_Module(Node);
 1010 A flower, sometimes
 0000 known as a bloom or blossom in flowering plants
 */
+
 void Node::read_input(std::string input_file_name)
 {
     std::ifstream input_file(input_file_name);
@@ -36,11 +37,55 @@ void Node::print_messages_and_errors()
 
 void Node::initialize()
 {
-    // TODO - Generated method body
-    //read the input file
-    read_input("./input_files/input0.txt");
-    //print the messages and errors
-    print_messages_and_errors();
+    // sender's parameters
+    nextFrameToSend = 0;
+    ackExpected = 0;
+
+
+    // receiver's parameter
+    frameExpected = 0;
+
+
+    numberOfBufferedFrames = 0;
+
+    // enable network layer
+    network_layer_enabled = true;
+
+    // set node id
+    std::string nodeName(getName());
+    nodeId = nodeName.back();
+
+    std::string output_file_name = "../src/output";
+    output_file_name.push_back(nodeId);
+    output_file_name.append(".txt");
+    output_file.open(output_file_name);
+    EV << "Output File is open = " << output_file.is_open() <<endl;
+
+    // buffers to store pointers to messages
+    frames_buffer.resize(MAX_SEQ);
+    timeouts_buffer.resize(MAX_SEQ);
+
+}
+
+std::string Node::packetFraming(std::string payload) {
+    std::string frame = "";
+    frame += '$';
+    for(int i = 0; i < payload.size(); i++){
+        if(payload[i] == '$' || payload[i] == '/')
+            frame+='/';
+
+        frame += payload[i];
+    }
+    frame+='$';
+
+    return frame;
+}
+
+double Node::duplicateFrame(double time, MyMessage_Base *msg) {
+    MyMessage_Base *duplicatedMsg = msg->dup();
+    time += getParentModule()->par("DD").doubleValue();
+    sendDelayed(duplicatedMsg, time, "out_port");
+    return time;
 }
 
 void Node::handleMessage(cMessage *msg)

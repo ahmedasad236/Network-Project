@@ -67,10 +67,43 @@ class Node : public cSimpleModule
 private:
    std::vector<std::string> messages;
    std::vector<std::string> errors;
+   int MAX_SEQ = 1;
+   int nextFrameToSend;
+   int ackExpected;
+   int frameExpected;
+   int numberOfBufferedFrames = 0;
+//   int line = 0;
+   int sentMessagesNumber = 0;
+   char nodeId;
+   bool sender;
+   bool initialState;
+   bool enableNetworkLayer;
+   bool endCommunication;
 
-   //function to read input file
+   //utility functions
    void read_input(std::string input_file_name);
    void print_messages_and_errors();
+
+   // Sender functions
+   void startProtocol();
+   void handleFrameArrival(MyMessage_Base *frame);
+   void handleNetworkLayerReady();
+   void handleTimeout(int frameSequence);
+   void sendControl(MyMessage_Base* control);
+   void startTimer(int frameSeqNum, double delayTime = 0);
+   void stopTimer(int frameSeqNum);
+   void incrementFrameSeq(int& frameSeqNum);
+   void sendData(std::string payload, std::string error, double sendingOffsetTime = 0.0);
+   std::string packetFraming(std::string payload);
+   void applyErrorAndSend(std::string error, double time, MyMessage_Base *msg);
+   double delayFrame(double time, MyMessage_Base *msg);
+   double duplicateFrame(double time, MyMessage_Base *msg);
+   int modifyFrame(double time, MyMessage_Base *msg);
+
+   // Receiver functions
+   void handleCheckSumError(cMessage* msg);
+   double duplicateFrame(double time, MyMessage_Base *msg);
+   void errorDetection(MyMessage_Base* msg);
 
    protected:
    virtual void initialize() override;
