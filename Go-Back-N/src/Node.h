@@ -64,9 +64,17 @@ enum LOG_INFO_TYPE {
 
 class Node : public cSimpleModule
 {
-  protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
+private:
+   std::vector<std::string> messages;
+   std::vector<std::string> errors;
+
+   //function to read input file
+   void read_input(std::string input_file_name);
+   void print_messages_and_errors();
+
+   protected:
+   virtual void initialize() override;
+   virtual void handleMessage(cMessage *msg) override;
 };
 
 #endif
