@@ -65,13 +65,19 @@ enum LOG_INFO_TYPE {
 class Node : public cSimpleModule
 {
 private:
+   std::ofstream outputFile;
+   std::ifstream inputFile;
    std::vector<std::string> messages;
    std::vector<std::string> errors;
+   std::vector<std::pair<std::string, MyMessage_Base *> > framesInBuffer;
+   std::vector<cMessage *> timeoutsBuffer;
    int MAX_SEQ = 1;
    int nextFrameToSend;
    int ackExpected;
    int frameExpected;
    int numberOfBufferedFrames = 0;
+   int numOfLines;
+
 //   int line = 0;
    int sentMessagesNumber = 0;
    char nodeId;
@@ -99,6 +105,7 @@ private:
    double delayFrame(double time, MyMessage_Base *msg);
    double duplicateFrame(double time, MyMessage_Base *msg);
    int modifyFrame(double time, MyMessage_Base *msg);
+   void applyParity(MyMessage_Base *msg);
 
    // Receiver functions
    void handleCheckSumError(cMessage* msg);
